@@ -18,7 +18,7 @@ module.exports.loop = function () {
     var minimumNumberOfUpgraders = 2;
     var minimumNumberOfBuilders = 1;
     var minimumNumberOfRepairers = 0;
-    var minimumNumberOfDefenders = 3;
+    var minimumNumberOfDefenders = 2;
     var minimumNumberOfRangedDefenders = 1;
     var numberOfMiners = _.sum(Game.creeps, (c) => c.memory.role == 'miner');
     var numberOfHarvesters = _.sum(Game.creeps, (c) => c.memory.role == 'harvester');
@@ -61,6 +61,9 @@ module.exports.loop = function () {
         }
 
         for(let link in Memory.rooms[curroom].links){
+          if(typeof link.role === 'undefined') {
+            
+          }
           if (link.role === 'sender'){
 
           }

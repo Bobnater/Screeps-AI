@@ -14,8 +14,6 @@ module.exports = {
 
         if (creep.memory.readytomine){
         	var site = creep.pos.findInRange(FIND_CONSTRUCTION_SITES,3);
-        	console.log(creep.carry[RESOURCE_ENERGY]);
-        	console.log((creep.carryCapacity-(workparts*2)));
 	        if (creep.carry[RESOURCE_ENERGY] >= (creep.carryCapacity-(workparts*2))){
 	        	creep.build(site);
 	    	}
