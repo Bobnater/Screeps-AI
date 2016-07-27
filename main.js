@@ -48,6 +48,7 @@ module.exports.loop = function () {
 
         if(typeof Memory.rooms[curroom].links === 'undefined' || Linksinroom !== Memory.rooms[curroom].links) {
             Memory.rooms[curroom].links = Linksinroom
+            
             console.log('Found links in room '+curroom+', they have been logged.');
             console.log(Memory.rooms[curroom].links);
         }
@@ -57,6 +58,12 @@ module.exports.loop = function () {
             console.log('Found sources in room '+curroom+', they have been logged.');
             console.log(Game.rooms[curroom].find(FIND_SOURCES));
             console.log(Memory.rooms[curroom].sources)
+        }
+
+        for(let link in Memory.rooms[curroom].links){
+          if (link.role === 'sender'){
+
+          }
         }
 
 
