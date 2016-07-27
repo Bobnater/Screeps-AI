@@ -39,6 +39,19 @@ module.exports.loop = function () {
 
 
     for (let curroom in Game.rooms) {
+
+        Linksinroom = Memory.rooms[curroom].links = Game.rooms[curroom].find(FIND_MY_STRUCTURES, {
+                          filter: (i) => i.structureType == STRUCTURE_LINK && 
+                                        i.energy > 500 
+                      });
+
+
+        if(typeof Memory.rooms[curroom].links === 'undefined' || Linksinroom !== Memory.rooms[curroom].links) {
+            Memory.rooms[curroom].links = Linksinroom
+            console.log('Found links in room '+curroom+', they have been logged.');
+            console.log(Memory.rooms[curroom].links);
+        }
+
         if(typeof Memory.rooms[curroom].sources === 'undefined') {
             Memory.rooms[curroom].sources = Game.rooms[curroom].find(FIND_SOURCES);
             console.log('Found sources in room '+curroom+', they have been logged.');
@@ -51,7 +64,6 @@ module.exports.loop = function () {
 
         if (Game.rooms[curroom].memory.currentcap === undefined) {
             Game.rooms[curroom].memory.currentcap = 10;
-            console.log('undefined')
         }
         if (Game.rooms[curroom].energyCapacityAvailable !== Game.rooms[curroom].memory.currentcap){ 
             
