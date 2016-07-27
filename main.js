@@ -62,7 +62,7 @@ module.exports.loop = function () {
 
         for(let link in Memory.rooms[curroom].links){
           if(typeof link.role === 'undefined') {
-            
+
           }
           if (link.role === 'sender'){
 
@@ -89,7 +89,7 @@ module.exports.loop = function () {
                 Game.rooms[curroom].memory.transbody.push (WORK,CARRY,MOVE)
             }
     
-            var minerparts = Math.floor((Game.rooms[curroom].energyCapacityAvailable - 200)/100);
+            var minerparts = Math.min(Math.floor((Game.rooms[curroom].energyCapacityAvailable - 200)/100), 8);
             for(let i = 0; i < minerparts; i++){
                 Game.rooms[curroom].memory.minerbody.push (WORK)
             }
