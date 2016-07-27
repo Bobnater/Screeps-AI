@@ -71,7 +71,6 @@ module.exports.loop = function () {
 
 
         Game.rooms[curroom].creepbodies = {defendbody:undefined,minerbody:undefined,transbody:undefined,harvestbody:undefined,rangedbody:undefined}
-
         if (Game.rooms[curroom].memory.currentcap === undefined) {
             Game.rooms[curroom].memory.currentcap = 10;
         }
