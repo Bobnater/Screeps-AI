@@ -29,24 +29,26 @@ module.exports = {
                     (s.structureType == STRUCTURE_CONTAINER || s.structureType == STRUCTURE_SPAWN)
                 });
     
-                if (structure) {
-                    if (creep.transfer(structure, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(structure);
-                    }
-                }
-                var structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
-                    filter: (s) => s.energy < s.energyCapacity && (s.structureType == STRUCTURE_SPAWN || s.structureType == STRUCTURE_EXTENSION || s.structureType == STRUCTURE_TOWER)
-                });
-    
-                if (structure) {
+                if (structure !== null) {
                     if (creep.transfer(structure, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(structure);
                     }
                 }
                 else {
-                    var bigasscontainer = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
-                        filter: (s) => s.store < s.storeCapacity
+                    var structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
+                        filter: (s) => s.energy < s.energyCapacity && (s.structureType == STRUCTURE_SPAWN || s.structureType == STRUCTURE_EXTENSION || s.structureType == STRUCTURE_TOWER)
                     });
+        
+                    if (structure) {
+                        if (creep.transfer(structure, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                            creep.moveTo(structure);
+                        }
+                    }
+                    else {
+                        var bigasscontainer = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
+                            filter: (s) => s.store < s.storeCapacity
+                        });
+                    }
                 }
             }
             else {
