@@ -15,7 +15,7 @@ module.exports.loop = function () {
 
     var minimumNumberOfMiners = 2;
     var minimumNumberOfHarvesters = 2;
-    var minimumNumberOfUpgraders = 2;
+    var minimumNumberOfUpgraders = 1;
     var minimumNumberOfBuilders = 1;
     var minimumNumberOfRepairers = 0;
     var minimumNumberOfDefenders = 2;
@@ -40,34 +40,34 @@ module.exports.loop = function () {
 
     for (let curroom in Game.rooms) {
 
-        Linksinroom = Memory.rooms[curroom].links = Game.rooms[curroom].find(FIND_MY_STRUCTURES, {
-                          filter: (i) => i.structureType == STRUCTURE_LINK && 
-                                        i.energy > 500 
-                      });
-
-
-        if(typeof Memory.rooms[curroom].links === 'undefined' || Linksinroom !== Memory.rooms[curroom].links) {
-            Memory.rooms[curroom].links = Linksinroom
-            
-            console.log('Found links in room '+curroom+', they have been logged.');
-            console.log(Memory.rooms[curroom].links);
-        }
-
-        if(typeof Memory.rooms[curroom].sources === 'undefined') {
-            Memory.rooms[curroom].sources = Game.rooms[curroom].find(FIND_SOURCES);
-            console.log('Found sources in room '+curroom+', they have been logged.');
-            console.log(Game.rooms[curroom].find(FIND_SOURCES));
-            console.log(Memory.rooms[curroom].sources)
-        }
-
-        for(let link in Memory.rooms[curroom].links){
-          if(typeof link.role === 'undefined') {
-
-          }
-          if (link.role === 'sender'){
-
-          }
-        }
+//        Linksinroom = Memory.rooms[curroom].links = Game.rooms[curroom].find(FIND_MY_STRUCTURES, {
+//                          filter: (i) => i.structureType == STRUCTURE_LINK && 
+//                                        i.energy > 500 
+//        });
+//
+//
+//        if(typeof Memory.rooms[curroom].links === 'undefined' || Linksinroom !== Memory.rooms[curroom].links) {
+//            Memory.rooms[curroom].links = Linksinroom
+//            
+//            console.log('Found links in room '+curroom+', they have been logged.');
+//            console.log(Memory.rooms[curroom].links);
+//        }
+//
+//        if(typeof Memory.rooms[curroom].sources === 'undefined') {
+//            Memory.rooms[curroom].sources = Game.rooms[curroom].find(FIND_SOURCES);
+//            console.log('Found sources in room '+curroom+', they have been logged.');
+//            console.log(Game.rooms[curroom].find(FIND_SOURCES));
+//            console.log(Memory.rooms[curroom].sources)
+//        }
+//
+//        for(let link in Memory.rooms[curroom].links){
+//          if(typeof link.role === 'undefined') {
+//
+//          }
+//          if (link.role === 'sender'){
+//
+//          }
+//        }
 
 
         Game.rooms[curroom].creepbodies = {defendbody:undefined,minerbody:undefined,transbody:undefined,harvestbody:undefined,rangedbody:undefined}
@@ -104,7 +104,7 @@ module.exports.loop = function () {
                 Game.rooms[curroom].memory.defendbody.push (ATTACK)
             }
     
-            var harvestparts = Math.floor(Game.rooms[curroom].energyCapacityAvailable/150);
+            var harvestparts = Math.min(Math.floor(Game.rooms[curroom].energyCapacityAvailable/150),8);
             for(let i = 0; i < harvestparts; i++){
                 Game.rooms[curroom].memory.harvestbody.push (CARRY,CARRY,MOVE)
             }
@@ -173,6 +173,11 @@ module.exports.loop = function () {
                name = Game.spawns.Spawn1.createCreep(Game.rooms[curroom].memory.rangedbody, null,
                    { role: 'rangeddefender', working: false});
            }
+           else if (Game.rooms[curroom].energyAvailable === (Game.rooms[curroom].energyCapacityAvailable - 400)) {
+               name = Game.spawns.Spawn1.createCreep([MOVE], null,
+                   { role: 'attacker', working: false});
+           }
+
            if (!(name < 0) && !(name == undefined)) {
                console.log("Spawned new creep: " + name);
            }
@@ -207,11 +212,11 @@ module.exports.loop = function () {
             tower.heal(thingtoheal[0]);
         }
         else if (tower.energy > 900 && Object.keys(Game.creeps).length > 5) {
-            var thingtorepair = tower.pos.findClosestByRange(FIND_STRUCTURES, { filter: function(c) { 
+            var thingtorepair = tower.pos.findInRange(FIND_STRUCTURES,23, { filter: function(c) { 
                 return (c.hits < (c.hitsMax - 400));
             }
             });
-            tower.repair(thingtorepair);
+            tower.repair(thingtorepair[0]);
         }
     }
 

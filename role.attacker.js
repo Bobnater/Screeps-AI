@@ -10,15 +10,15 @@ module.exports = {
             var right = creep.pos.findClosestByPath(FIND_EXIT_RIGHT);
             var up = creep.pos.findClosestByPath(FIND_EXIT_TOP);
             var down = creep.pos.findClosestByPath(FIND_EXIT_BOTTOM);  
-            if(!(up == undefined)){
-                creep.moveTo(up);
+            if(!(right == undefined)){
+                creep.moveTo(right);
             } 
-        //    else if(!(down == undefined)){
-        //        creep.moveTo(down);
-        //    } 
-        //    else if(!(down == undefined)){
-        //        creep.moveTo(down);
-        //    } 
+           else if(!(down == undefined)){
+               creep.moveTo(down);
+           } 
+           else if(!(down == undefined)){
+               creep.moveTo(down);
+           } 
         }
         else if(creep.moveTo(spawntarget) > -1 && !(spawntarget == undefined)) {
             if(creep.rangedAttack(spawntarget) == ERR_NOT_IN_RANGE) {

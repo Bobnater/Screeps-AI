@@ -2,7 +2,7 @@ module.exports = {
     run: function(creep) {
 
         var target = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-        if(typeof target !== null){
+        if(target !== null){
             if(creep.pos.getRangeTo(target) < 3) {
                 var direction = creep.pos.getDirectionTo(target);
                 var run = null;

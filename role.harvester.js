@@ -2,14 +2,13 @@
 module.exports = {
     run: function(creep) {
         if (creep.ticksToLive < 50){
-            console.log('I will die soon');
             var energystorage = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
-                filter: (i) => i.structureType == STRUCTURE_STORAGE && 
-                        i.store[RESOURCE_ENERGY] > 0
-            }); console.log(energystore);
+                filter: (i) => i.structureType == STRUCTURE_STORAGE
+            }); 
+            console.log(energystorage);
             if (energystore !== null) {
-                if (creep.transfer(energystore, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(energystore);
+                if (creep.transfer(energystorage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(energystorage);
                 }
             }
         }
@@ -25,7 +24,7 @@ module.exports = {
             if (creep.memory.working == true) {
                 var structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
                     filter: (s) => s.energy < s.energyCapacity &&
-                    (s.structureType == STRUCTURE_CONTAINER || s.structureType == STRUCTURE_SPAWN)
+                    (s.structureType == STRUCTURE_EXTENSION || s.structureType == STRUCTURE_SPAWN)
                 });
     
                 if (structure !== null) {
@@ -34,18 +33,18 @@ module.exports = {
                     }
                 }
                 else {
-                    var structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
-                        filter: (s) => s.energy < s.energyCapacity && (s.structureType == STRUCTURE_SPAWN || s.structureType == STRUCTURE_EXTENSION || s.structureType == STRUCTURE_TOWER)
+                    structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
+                        filter: (s) => s.energy < s.energyCapacity && s.structureType == STRUCTURE_TOWER
                     });
         
-                    if (structure) {
+                    if (structure !== null) {
                         if (creep.transfer(structure, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                             creep.moveTo(structure);
                         }
                     }
                     else {
                         var bigasscontainer = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
-                            filter: (s) => s.store < s.storeCapacity
+                            filter: (s) => s.store < s.storeCapacity && s.structureType == STRUCTURE_STORAGE
                         });
                     }
                 }
