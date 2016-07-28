@@ -2,11 +2,10 @@ module.exports = {
     run: function(creep) {
 
         var target = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-        console.log(typeof target);
-        if(typeof target !== 'undefined'){
+        if(typeof target !== null){
             if(creep.pos.getRangeTo(target) < 3) {
                 var direction = creep.pos.getDirectionTo(target);
-                var run = undefined;
+                var run = null;
                 if(direction <= 4){
                         run = (direction + 4);
                     }
