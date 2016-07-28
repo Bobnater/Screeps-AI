@@ -1,14 +1,13 @@
 
 module.exports = {
     run: function(creep) {
-
-        if (creep.ticksToLivenumber < 50){
+        if (creep.ticksToLive < 50){
             console.log('I will die soon');
             var energystorage = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
                 filter: (i) => i.structureType == STRUCTURE_STORAGE && 
                         i.store[RESOURCE_ENERGY] > 0
-            });
-            if (typeof energystore !== 'undefined') {
+            }); console.log(energystore);
+            if (energystore !== null) {
                 if (creep.transfer(energystore, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(energystore);
                 }
