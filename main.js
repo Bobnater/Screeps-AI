@@ -198,13 +198,13 @@ module.exports.loop = function () {
             return (c.hits < c.hitsMax);
         }
         });
-        if (Object.keys(thingtoshoot).length > 0){
-            tower.attack(thingtoshoot);
+        if (typeof thingtoshoot[0] !== 'undefined'){
+            tower.attack(thingtoshoot[0]);
             var username = thingtoshoot[0].owner.username;
             Game.notify('User '+ username + ' spotted in room');
         }
-        else if (Object.keys(thingtoheal).length > 0) {
-            tower.heal(thingtoheal);
+        else if (typeof thingtoheal[0] !== 'undefined') {
+            tower.heal(thingtoheal[0]);
         }
         else if (tower.energy > 900 && Object.keys(Game.creeps).length > 5) {
             var thingtorepair = tower.pos.findClosestByRange(FIND_STRUCTURES, { filter: function(c) { 
