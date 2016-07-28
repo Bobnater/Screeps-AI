@@ -7,9 +7,9 @@ module.exports = {
         var walltarget = creep.pos.findClosestByRange(FIND_STRUCTURES);
 
         if(spawntarget == undefined) {
-            var right = creep.pos.findClosestByPath(FIND_EXIT_RIGHT);
-            var up = creep.pos.findClosestByPath(FIND_EXIT_TOP);
-            var down = creep.pos.findClosestByPath(FIND_EXIT_BOTTOM);  
+            var right = creep.pos.findClosestByRange(FIND_EXIT_RIGHT);
+            var up = creep.pos.findClosestByRange(FIND_EXIT_TOP);
+            var down = creep.pos.findClosestByRange(FIND_EXIT_BOTTOM);  
             if(!(right == undefined)){
                 creep.moveTo(right);
             } 

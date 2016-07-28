@@ -93,12 +93,12 @@ module.exports.loop = function () {
                 Game.rooms[curroom].memory.minerbody.push (WORK)
             }
     
-            var defendparts = Math.floor(Game.rooms[curroom].energyCapacityAvailable/150);
+            var defendparts = Math.floor(Game.rooms[curroom].energyCapacityAvailable/250);
             for(let i = 0; i < defendparts; i++){
                 Game.rooms[curroom].memory.defendbody.push (TOUGH,TOUGH)
             }
             for(let i = 0; i < defendparts; i++){
-                Game.rooms[curroom].memory.defendbody.push (MOVE)
+                Game.rooms[curroom].memory.defendbody.push (MOVE,MOVE,MOVE)
             }
             for(let i = 0; i < defendparts; i++){
                 Game.rooms[curroom].memory.defendbody.push (ATTACK)
@@ -173,7 +173,7 @@ module.exports.loop = function () {
                name = Game.spawns.Spawn1.createCreep(Game.rooms[curroom].memory.rangedbody, null,
                    { role: 'rangeddefender', working: false});
            }
-           else if (Game.rooms[curroom].energyAvailable === (Game.rooms[curroom].energyCapacityAvailable - 400)) {
+           else if (Game.rooms[curroom].energyAvailable > (Game.rooms[curroom].energyCapacityAvailable - 400)) {
                name = Game.spawns.Spawn1.createCreep([MOVE], null,
                    { role: 'attacker', working: false});
            }

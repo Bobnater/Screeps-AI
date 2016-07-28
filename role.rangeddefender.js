@@ -16,7 +16,8 @@ module.exports = {
                 creep.move(run);
     
             }
-            else if(creep.attack(target) == ERR_NOT_IN_RANGE) {
+            else if(creep.rangedAttack(target) == ERR_NOT_IN_RANGE) {
+                console.log('attacking');
                 creep.moveTo(target);
 
             }
