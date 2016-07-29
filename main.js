@@ -7,6 +7,7 @@ var roleStarter = require('role.starter');
 var roleDefender = require('role.defender');
 var roleAttacker = require('role.attacker');
 var roleRangedDefender = require('role.rangeddefender');
+var roleRemoteMiner = require('role.remoteminer');
 var name = undefined;
 
 
@@ -20,6 +21,8 @@ module.exports.loop = function () {
     var minimumNumberOfRepairers = 0;
     var minimumNumberOfDefenders = 2;
     var minimumNumberOfRangedDefenders = 1;
+    var minimumNumberOfRemoteMiners = 1;
+    var minimumNumberOfRemoteHarvesters = 1;
     var numberOfMiners = _.sum(Game.creeps, (c) => c.memory.role == 'miner');
     var numberOfHarvesters = _.sum(Game.creeps, (c) => c.memory.role == 'harvester');
     var numberOfUpgraders = _.sum(Game.creeps, (c) => c.memory.role == 'upgrader');
@@ -27,6 +30,9 @@ module.exports.loop = function () {
     var numberOfRepairers = _.sum(Game.creeps, (c) => c.memory.role == 'repairer');
     var numberOfDefenders = _.sum(Game.creeps, (c) => c.memory.role == 'defender');
     var numberOfRangedDefenders = _.sum(Game.creeps, (c) => c.memory.role == 'rangeddefender');
+    var numberOfRemoteMiners = _.sum(Game.creeps, (c) => c.memory.role == 'remoteminer');
+    var numberOfRemoteHarvesters = _.sum(Game.creeps, (c) => c.memory.role == 'remoteharvester');
+    var remoterooms = ['E41S2'];
 
     for (var i in Memory.creeps){
         if (!Game.creeps[i]) {
@@ -53,12 +59,6 @@ module.exports.loop = function () {
 //            console.log(Memory.rooms[curroom].links);
 //        }
 //
-//        if(typeof Memory.rooms[curroom].sources === 'undefined') {
-//            Memory.rooms[curroom].sources = Game.rooms[curroom].find(FIND_SOURCES);
-//            console.log('Found sources in room '+curroom+', they have been logged.');
-//            console.log(Game.rooms[curroom].find(FIND_SOURCES));
-//            console.log(Memory.rooms[curroom].sources)
-//        }
 //
 //        for(let link in Memory.rooms[curroom].links){
 //          if(typeof link.role === 'undefined') {
@@ -119,7 +119,7 @@ module.exports.loop = function () {
             for(let i = 0; i < rangedparts; i++){
                 Game.rooms[curroom].memory.rangedbody.push (RANGED_ATTACK)
             }
-    
+      
     
             console.log('New Miner chassi = '+Game.rooms[curroom].memory.minerbody);
             console.log('New Transport chassi = '+Game.rooms[curroom].memory.transbody);
@@ -130,6 +130,14 @@ module.exports.loop = function () {
             console.log('Actual room capacity ' +Game.rooms[curroom].energyCapacityAvailable);
     
         }
+
+        if(typeof Memory.rooms[curroom].sources === 'undefined') {
+            Memory.rooms[curroom].sources = Game.rooms[curroom].find(FIND_SOURCES);
+            console.log('Found sources in room '+curroom+', they have been logged.');
+            console.log(Game.rooms[curroom].find(FIND_SOURCES));
+            console.log(Memory.rooms[curroom].sources)
+        }
+
 
         if ((Object.keys(Game.creeps).length) < 2){
             name = Game.spawns.Spawn1.createCreep([WORK,CARRY,MOVE,MOVE], null,
@@ -173,10 +181,18 @@ module.exports.loop = function () {
                name = Game.spawns.Spawn1.createCreep(Game.rooms[curroom].memory.rangedbody, null,
                    { role: 'rangeddefender', working: false});
            }
-           else if (Game.rooms[curroom].energyAvailable > (Game.rooms[curroom].energyCapacityAvailable - 400)) {
-               name = Game.spawns.Spawn1.createCreep([MOVE], null,
-                   { role: 'attacker', working: false});
-           }
+//           else if (numberOfRemoteMiners < minimumNumberOfRemoteMiners && !(Memory.rooms[remoterooms[0]].sources === [])) {
+//               name = Game.spawns.Spawn1.createCreep(Game.rooms[curroom].memory.minerbody, null,
+//                   { role: 'remoteminer', working: false, readytomine: false, room: Memory.rooms[remoterooms[0]], source: Memory.rooms[remoterooms[0]].sources.pop()});
+//           }
+//           else if (numberOfRemoteMiners < minimumNumberOfRemoteMiners && !(Memory.rooms[remoterooms[0]].sources === [])) {
+//               name = Game.spawns.Spawn1.createCreep(Game.rooms[curroom].memory.minerbody, null,
+//                   { role: 'remoteminer', working: false, readytomine: false, room: Memory.rooms[remoterooms[0]], source: Memory.rooms[remoterooms[0]].sources.pop()});
+//           }
+//          else if (Game.rooms[curroom].energyAvailable > (Game.rooms[curroom].energyCapacityAvailable - 400)) {
+//              name = Game.spawns.Spawn1.createCreep([MOVE], null,
+//                  { role: 'attacker', working: false});
+//          }
 
            if (!(name < 0) && !(name == undefined)) {
                console.log("Spawned new creep: " + name);

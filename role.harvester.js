@@ -1,6 +1,12 @@
 
 module.exports = {
     run: function(creep) {
+
+        let droppedEnergy = creep.pos.findInRange(FIND_DROPPED_ENERGY, 1);  
+        if (droppedEnergy.length > 0) {
+            creep.pickup(droppedEnergy[0]);
+        }
+        
         if (creep.ticksToLive < 50){
             var energystorage = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
                 filter: (i) => i.structureType == STRUCTURE_STORAGE

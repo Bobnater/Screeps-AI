@@ -12,5 +12,8 @@ module.exports = {
             creep.moveTo(36,30);
         }
 
+        if (creep.ticksToLive < 100){
+            Memory.creeps[creep.name].role = 'attacker';
+        }
     }
 };

@@ -13,8 +13,8 @@ module.exports = {
             if(!(right == undefined)){
                 creep.moveTo(right);
             } 
-           else if(!(down == undefined)){
-               creep.moveTo(down);
+           else if(!(up == undefined)){
+               creep.moveTo(up);
            } 
            else if(!(down == undefined)){
                creep.moveTo(down);
@@ -27,7 +27,7 @@ module.exports = {
         }
         else if(creep.moveTo(creeptarget) > -1 && !(creeptarget == undefined)) {
             if(creep.rangedAttack(creeptarget) == ERR_NOT_IN_RANGE) {
-
+  
             }
         }
         else if(creep.moveTo(walltarget) > -1 && !(walltarget == undefined)) {

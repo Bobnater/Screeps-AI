@@ -1,6 +1,11 @@
 module.exports = {
     run: function(creep) {
 
+        let droppedEnergy = creep.pos.findInRange(FIND_DROPPED_ENERGY, 1);  
+        if (droppedEnergy.length > 0) {
+            creep.pickup(droppedEnergy[0]);
+        }
+        
         if (creep.memory.working == true && creep.carry.energy == 0) {
             creep.memory.working = false;
         }
