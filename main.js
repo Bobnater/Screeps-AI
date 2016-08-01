@@ -46,29 +46,6 @@ module.exports.loop = function () {
 
     for (let curroom in Game.rooms) {
 
-//        Linksinroom = Memory.rooms[curroom].links = Game.rooms[curroom].find(FIND_MY_STRUCTURES, {
-//                          filter: (i) => i.structureType == STRUCTURE_LINK && 
-//                                        i.energy > 500 
-//        });
-//
-//
-//        if(typeof Memory.rooms[curroom].links === 'undefined' || Linksinroom !== Memory.rooms[curroom].links) {
-//            Memory.rooms[curroom].links = Linksinroom
-//            
-//            console.log('Found links in room '+curroom+', they have been logged.');
-//            console.log(Memory.rooms[curroom].links);
-//        }
-//
-//
-//        for(let link in Memory.rooms[curroom].links){
-//          if(typeof link.role === 'undefined') {
-//
-//          }
-//          if (link.role === 'sender'){
-//
-//          }
-//        }
-
 
         Game.rooms[curroom].creepbodies = {defendbody:undefined,minerbody:undefined,transbody:undefined,harvestbody:undefined,rangedbody:undefined}
         if (Game.rooms[curroom].memory.currentcap === undefined) {
@@ -79,7 +56,7 @@ module.exports.loop = function () {
             Game.rooms[curroom].memory.defendbody = [];
             Game.rooms[curroom].memory.minerbody = [MOVE,CARRY,MOVE,MOVE];
             Game.rooms[curroom].memory.transbody = [];
-            Game.rooms[curroom].memory.harvestbody = [];
+            Game.rooms[curroom].memory.harvestbody = [WORK,CARRY,MOVE];
             Game.rooms[curroom].memory.rangedbody = [];
     
             Game.rooms[curroom].memory.currentcap = Game.rooms[curroom].energyCapacityAvailable;
@@ -104,7 +81,7 @@ module.exports.loop = function () {
                 Game.rooms[curroom].memory.defendbody.push (ATTACK)
             }
     
-            var harvestparts = Math.min(Math.floor(Game.rooms[curroom].energyCapacityAvailable/150),8);
+            var harvestparts = Math.min(Math.floor((Game.rooms[curroom].energyCapacityAvailable-150)/150),8);
             for(let i = 0; i < harvestparts; i++){
                 Game.rooms[curroom].memory.harvestbody.push (CARRY,CARRY,MOVE)
             }
@@ -200,6 +177,20 @@ module.exports.loop = function () {
 
         }
 
+      var linksend = undefined;
+      var linkReceive = undefined;
+
+      for (let thisflag in Game.flags) {
+        if (Game.flags[thisflag].name === 'Link_Send') {
+          linksend = Game.flags[thisflag].pos.lookFor(LOOK_STRUCTURES);
+        }
+        if (Game.flags[thisflag].name === 'Link_Receive') {
+          linkReceive = Game.flags[thisflag].pos.lookFor(LOOK_STRUCTURES);
+        }
+      }
+      if(typeof linksend !== 'undefined' && typeof linkReceive !== 'undefined') {
+        linksend[0].transferEnergy(linkReceive[0]);
+      }
     }
 
 
@@ -208,15 +199,19 @@ module.exports.loop = function () {
 
 
 
-        var towers = Game.spawns.Spawn1.room.find(FIND_MY_STRUCTURES, { filter: function(object) {
-            return object.structureType == STRUCTURE_TOWER;
-        }
-        });
+    var towers = Game.spawns.Spawn1.room.find(FIND_MY_STRUCTURES, { filter: function(object) {
+        return object.structureType == STRUCTURE_TOWER;
+    }
+    });
     for (let key in towers){
         var tower = towers[key];
         var thingtoshoot = tower.pos.findInRange(FIND_HOSTILE_CREEPS, 7);
         var thingtoheal = tower.pos.findInRange(FIND_MY_CREEPS, 7, { filter: function(c) { 
             return (c.hits < c.hitsMax);
+        }
+        });
+        var thingtorepair = tower.pos.findInRange(FIND_STRUCTURES,23, { filter: function(c) { 
+            return (c.hits < (c.hitsMax - 400) && c.structureType !== STRUCTURE_WALL && c.structureType !== STRUCTURE_RAMPART); 
         }
         });
         if (typeof thingtoshoot[0] !== 'undefined'){
@@ -227,12 +222,15 @@ module.exports.loop = function () {
         else if (typeof thingtoheal[0] !== 'undefined') {
             tower.heal(thingtoheal[0]);
         }
-        else if (tower.energy > 900 && Object.keys(Game.creeps).length > 5) {
-            var thingtorepair = tower.pos.findInRange(FIND_STRUCTURES,23, { filter: function(c) { 
-                return (c.hits < (c.hitsMax - 400));
+        else if (tower.energy > 900 && Object.keys(Game.creeps).length > 5 && typeof thingtorepair[0] !== 'undefined') {
+            tower.repair(thingtorepair[0]);
+        }
+        else if (tower.energy > 950 && Object.keys(Game.creeps).length > 5) {
+            var thingtorepair2 = tower.pos.findInRange(FIND_STRUCTURES,30, { filter: function(c) { 
+                return (c.hits < 10000 && (c.structureType === STRUCTURE_WALL || c.structureType === STRUCTURE_RAMPART)); 
             }
             });
-            tower.repair(thingtorepair[0]);
+            tower.repair(thingtorepair2[0]);
         }
     }
 
@@ -240,7 +238,6 @@ module.exports.loop = function () {
 
 
     for (let name in Game.creeps) {
-
         var creep = Game.creeps[name];
         if (creep.memory.role == 'miner') {
             roleMiner.run(creep);

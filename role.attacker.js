@@ -21,21 +21,17 @@ module.exports = {
            } 
         }
         else if(creep.moveTo(spawntarget) > -1 && !(spawntarget == undefined)) {
-            if(creep.rangedAttack(spawntarget) == ERR_NOT_IN_RANGE) {
 
-            }
         }
         else if(creep.moveTo(creeptarget) > -1 && !(creeptarget == undefined)) {
-            if(creep.rangedAttack(creeptarget) == ERR_NOT_IN_RANGE) {
-  
-            }
+
         }
         else if(creep.moveTo(walltarget) > -1 && !(walltarget == undefined)) {
-            if(creep.rangedAttack(walltarget) == ERR_NOT_IN_RANGE) {
 
-            }
         }
-
+        creep.attack(spawntarget);
+        creep.attack(creeptarget);
+        creep.attack(walltarget);
 
     }
 };

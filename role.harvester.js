@@ -2,6 +2,10 @@
 module.exports = {
     run: function(creep) {
 
+        let repairtarget = creep.pos.findInRange(FIND_STRUCTURES,1, { Filter: (s) => s.structureType === STRUCTURE_ROAD && s.hits < s.hitsMax});
+        if (repairtarget.length > 0) {
+            creep.repair(repairtarget[0]);
+        }
         let droppedEnergy = creep.pos.findInRange(FIND_DROPPED_ENERGY, 1);  
         if (droppedEnergy.length > 0) {
             creep.pickup(droppedEnergy[0]);
@@ -11,7 +15,6 @@ module.exports = {
             var energystorage = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
                 filter: (i) => i.structureType == STRUCTURE_STORAGE
             }); 
-            console.log(energystorage);
             if (energystore !== null) {
                 if (creep.transfer(energystorage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(energystorage);
@@ -40,7 +43,7 @@ module.exports = {
                 }
                 else {
                     structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
-                        filter: (s) => s.energy < s.energyCapacity && s.structureType == STRUCTURE_TOWER
+                        filter: (s) => s.energy < s.energyCapacity && (s.structureType == STRUCTURE_TOWER || s.structureType == STRUCTURE_LINK)
                     });
         
                     if (structure !== null) {
@@ -52,6 +55,11 @@ module.exports = {
                         var bigasscontainer = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
                             filter: (s) => s.store < s.storeCapacity && s.structureType == STRUCTURE_STORAGE
                         });
+                        if (bigasscontainer !== null) {
+                            if (creep.transfer(bigasscontainer, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                                creep.moveTo(bigasscontainer);
+                            }
+                        }
                     }
                 }
             }
