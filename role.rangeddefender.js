@@ -4,16 +4,8 @@ module.exports = {
         var target = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
         if(target !== null){
             if(creep.pos.getRangeTo(target) < 3) {
-                var direction = creep.pos.getDirectionTo(target);
-                var run = null;
-                if(direction <= 4){
-                        run = (direction + 4);
-                    }
-                else {
-                    run = (direction - 4);
-                }
-    
-                creep.move(run);
+                var runningPath = PathFinder.search(creep.pos, {pos: target.pos, range: 3}, {flee:true})
+                creep.moveByPath(runningPath.path);
     
             }
             else if(creep.rangedAttack(target) == ERR_NOT_IN_RANGE) {

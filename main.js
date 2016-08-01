@@ -45,7 +45,12 @@ module.exports.loop = function () {
 
 
     for (let curroom in Game.rooms) {
-
+      var enemy = Game.rooms[curroom].find(FIND_HOSTILE_CREEPS);
+      if (typeof enemy[0] !== 'undefined' && enemy !== null){
+        var username1 = enemy[0].owner.username;
+        Game.notify('User '+ username1 + ' spotted in room');
+      }
+      
 
         Game.rooms[curroom].creepbodies = {defendbody:undefined,minerbody:undefined,transbody:undefined,harvestbody:undefined,rangedbody:undefined}
         if (Game.rooms[curroom].memory.currentcap === undefined) {
@@ -216,13 +221,11 @@ module.exports.loop = function () {
         });
         if (typeof thingtoshoot[0] !== 'undefined'){
             tower.attack(thingtoshoot[0]);
-            var username = thingtoshoot[0].owner.username;
-            Game.notify('User '+ username + ' spotted in room');
-        }
+        } 
         else if (typeof thingtoheal[0] !== 'undefined') {
             tower.heal(thingtoheal[0]);
         }
-        else if (tower.energy > 900 && Object.keys(Game.creeps).length > 5 && typeof thingtorepair[0] !== 'undefined') {
+        else if (tower.energy > 900 && typeof thingtorepair[0] !== 'undefined') {
             tower.repair(thingtorepair[0]);
         }
         else if (tower.energy > 950 && Object.keys(Game.creeps).length > 5) {
