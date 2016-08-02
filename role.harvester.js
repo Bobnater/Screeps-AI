@@ -2,10 +2,6 @@
 module.exports = {
     run: function(creep) {
 
-        let repairtarget = creep.pos.findInRange(FIND_STRUCTURES,1, { Filter: (s) => s.structureType === STRUCTURE_ROAD && s.hits < s.hitsMax});
-        if (repairtarget.length > 0) {
-            creep.repair(repairtarget[0]);
-        }
         let droppedEnergy = creep.pos.findInRange(FIND_DROPPED_ENERGY, 1);  
         if (droppedEnergy.length > 0) {
             creep.pickup(droppedEnergy[0]);
@@ -75,6 +71,11 @@ module.exports = {
                     }
                 }
             }
+        }
+        
+        let repairtarget = creep.pos.findInRange(FIND_STRUCTURES,1, { Filter: (s) => s.structureType === STRUCTURE_ROAD && s.hits < s.hitsMax});
+        if (repairtarget.length > 0) {
+            creep.repair(repairtarget[0]);
         }
     }
 };

@@ -48,7 +48,7 @@ module.exports.loop = function () {
       var enemy = Game.rooms[curroom].find(FIND_HOSTILE_CREEPS);
       if (typeof enemy[0] !== 'undefined' && enemy !== null){
         var username1 = enemy[0].owner.username;
-        Game.notify('User '+ username1 + ' spotted in room');
+        Game.notify('User '+ username1 + ' spotted in room '+curroom);
       }
       
 
