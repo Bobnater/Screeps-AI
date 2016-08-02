@@ -1,12 +1,13 @@
 module.exports = {
     run: function(creep) {
+        var walltarget =[];
+        var spawntarget =[];
+        var creeptarget =[];
 
-
-        var spawntarget = creep.pos.findClosestByRange(FIND_HOSTILE_SPAWNS);
-        var creeptarget = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-        var walltarget = creep.pos.findClosestByRange(FIND_STRUCTURES);
-
-        if(spawntarget == undefined) {
+        spawntarget = creep.pos.findClosestByRange(FIND_HOSTILE_SPAWNS);
+        creeptarget = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+        walltarget = creep.pos.findClosestByRange(FIND_STRUCTURES);
+        if(spawntarget === null) {
             var right = creep.pos.findClosestByRange(FIND_EXIT_RIGHT);
             var up = creep.pos.findClosestByRange(FIND_EXIT_TOP);
             var down = creep.pos.findClosestByRange(FIND_EXIT_BOTTOM);  
@@ -20,14 +21,14 @@ module.exports = {
                creep.moveTo(down);
            } 
         }
-        else if(creep.moveTo(spawntarget) > -1 && !(spawntarget == undefined)) {
-
+        else if(spawntarget[0] !== null) {
+            creep.moveTo(spawntarget)
         }
-        else if(creep.moveTo(creeptarget) > -1 && !(creeptarget == undefined)) {
-
+        else if(creeptarget[0] !== null) {
+            creep.moveTo(creeptarget)
         }
-        else if(creep.moveTo(walltarget) > -1 && !(walltarget == undefined)) {
-
+        else if(walltarget[0] !== null) {
+            creep.moveTo(walltarget)
         }
         creep.attack(spawntarget);
         creep.attack(creeptarget);

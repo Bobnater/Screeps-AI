@@ -8,8 +8,8 @@ module.exports = {
         if (creep.hits < creep.hitsMax) {
           creep.heal(creep);
         }
-        else if (typeof friendly !== 'undefined' && friendly[0] !== null ){
-          var range = creep.getRangeTo(friendly);
+        else if (friendly !== null){
+          var range = creep.pos.getRangeTo(friendly);
           if(range === 2 ){
             creep.moveTo(friendly);
             creep.heal(friendly);

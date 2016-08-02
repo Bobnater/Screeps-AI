@@ -8,15 +8,21 @@ var roleDefender = require('role.defender');
 var roleAttacker = require('role.attacker');
 var roleRangedDefender = require('role.rangeddefender');
 var roleRemoteMiner = require('role.remoteminer');
+var roleDrain = require('role.drain');
 var name = undefined;
 
 
 
 module.exports.loop = function () {
 
+  if (Game.cpu.bucket < 900){
+    Game.notify('HOLY SHIT BUY SOME CPU');
+  }
+
+
     var minimumNumberOfMiners = 2;
     var minimumNumberOfHarvesters = 2;
-    var minimumNumberOfUpgraders = 1;
+    var minimumNumberOfUpgraders = 2;
     var minimumNumberOfBuilders = 1;
     var minimumNumberOfRepairers = 0;
     var minimumNumberOfDefenders = 2;
@@ -63,6 +69,7 @@ module.exports.loop = function () {
             Game.rooms[curroom].memory.transbody = [];
             Game.rooms[curroom].memory.harvestbody = [WORK,CARRY,MOVE];
             Game.rooms[curroom].memory.rangedbody = [];
+            Game.rooms[curroom].memory.drainbody = [];
     
             Game.rooms[curroom].memory.currentcap = Game.rooms[curroom].energyCapacityAvailable;
             var transparts = Math.floor(Game.rooms[curroom].energyCapacityAvailable/200);
@@ -101,6 +108,15 @@ module.exports.loop = function () {
             for(let i = 0; i < rangedparts; i++){
                 Game.rooms[curroom].memory.rangedbody.push (RANGED_ATTACK)
             }
+
+            var drainparts = Math.floor((Game.rooms[curroom].energyCapacityAvailable-1330)/130);
+            for(let i = 0; i < drainparts; i++){
+                Game.rooms[curroom].memory.drainbody.push (TOUGH,TOUGH,TOUGH)
+            }
+            for(let i = 0; i < drainparts; i++){
+                Game.rooms[curroom].memory.drainbody.push (MOVE,MOVE)
+            }
+            Game.rooms[curroom].memory.drainbody.push (ATTACK,HEAL,HEAL,HEAL,HEAL,HEAL)
       
     
             console.log('New Miner chassi = '+Game.rooms[curroom].memory.minerbody);
@@ -108,6 +124,7 @@ module.exports.loop = function () {
             console.log('New Defender chassi = '+Game.rooms[curroom].memory.defendbody);
             console.log('New Harvest chassi = '+Game.rooms[curroom].memory.harvestbody);
             console.log('New Ranged chassi = '+Game.rooms[curroom].memory.rangedbody);
+            console.log('New drain chassi = '+Game.rooms[curroom].memory.drainbody);
             console.log('Stored room capacity '+Game.rooms[curroom].memory.currentcap);
             console.log('Actual room capacity ' +Game.rooms[curroom].energyCapacityAvailable);
     
@@ -168,7 +185,7 @@ module.exports.loop = function () {
 //                   { role: 'remoteminer', working: false, readytomine: false, room: Memory.rooms[remoterooms[0]], source: Memory.rooms[remoterooms[0]].sources.pop()});
 //           }
 //           else if (numberOfRemoteMiners < minimumNumberOfRemoteMiners && !(Memory.rooms[remoterooms[0]].sources === [])) {
-//               name = Game.spawns.Spawn1.createCreep(Game.rooms[curroom].memory.minerbody, null,
+//               name = Game.spawns.Spawn1.createCreep(Game.rooms[curroom].memory.minerbody, null,x
 //                   { role: 'remoteminer', working: false, readytomine: false, room: Memory.rooms[remoterooms[0]], source: Memory.rooms[remoterooms[0]].sources.pop()});
 //           }
 //          else if (Game.rooms[curroom].energyAvailable > (Game.rooms[curroom].energyCapacityAvailable - 400)) {
@@ -185,17 +202,17 @@ module.exports.loop = function () {
       var linksend = undefined;
       var linkReceive = undefined;
 
-      for (let thisflag in Game.flags) {
-        if (Game.flags[thisflag].name === 'Link_Send') {
-          linksend = Game.flags[thisflag].pos.lookFor(LOOK_STRUCTURES);
-        }
-        if (Game.flags[thisflag].name === 'Link_Receive') {
-          linkReceive = Game.flags[thisflag].pos.lookFor(LOOK_STRUCTURES);
-        }
-      }
-      if(typeof linksend !== 'undefined' && typeof linkReceive !== 'undefined') {
-        linksend[0].transferEnergy(linkReceive[0]);
-      }
+//      for (let thisflag in Game.flags) {
+//        if (Game.flags[thisflag].name === 'Link_Send') {
+//          linksend = Game.flags[thisflag].pos.lookFor(LOOK_STRUCTURES);
+//        }
+//        if (Game.flags[thisflag].name === 'Link_Receive') {
+//          linkReceive = Game.flags[thisflag].pos.lookFor(LOOK_STRUCTURES);
+//        }
+//      }
+//      if(typeof linksend !== 'undefined' && typeof linkReceive !== 'undefined') {
+//        linksend[0].transferEnergy(linkReceive[0]);
+//      }
     }
 
 
@@ -268,6 +285,9 @@ module.exports.loop = function () {
         }
         else if (creep.memory.role == 'rangeddefender') {
             roleRangedDefender.run(creep);
+        }
+        else if (creep.memory.role == 'drain') {
+            roleDrain.run(creep);
         }
     }
 

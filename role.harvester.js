@@ -39,7 +39,7 @@ module.exports = {
                 }
                 else {
                     structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
-                        filter: (s) => s.energy < s.energyCapacity && (s.structureType == STRUCTURE_TOWER || s.structureType == STRUCTURE_LINK)
+                        filter: (s) => s.energy < s.energyCapacity && (s.structureType == STRUCTURE_TOWER ) //|| s.structureType == STRUCTURE_LINK)
                     });
         
                     if (structure !== null) {
@@ -72,8 +72,8 @@ module.exports = {
                 }
             }
         }
-        
-        let repairtarget = creep.pos.findInRange(FIND_STRUCTURES,1, { Filter: (s) => s.structureType === STRUCTURE_ROAD && s.hits < s.hitsMax});
+
+        let repairtarget = creep.pos.findInRange(FIND_STRUCTURES,3, { Filter: (s) => s.structureType === STRUCTURE_ROAD && s.hits < s.hitsMax});
         if (repairtarget.length > 0) {
             creep.repair(repairtarget[0]);
         }
