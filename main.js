@@ -23,7 +23,7 @@ module.exports.loop = function () {
     var minimumNumberOfMiners = 2;
     var minimumNumberOfHarvesters = 2;
     var minimumNumberOfUpgraders = 2;
-    var minimumNumberOfBuilders = 1;
+    var minimumNumberOfBuilders = 3;
     var minimumNumberOfRepairers = 0;
     var minimumNumberOfDefenders = 2;
     var minimumNumberOfRangedDefenders = 1;
@@ -49,7 +49,6 @@ module.exports.loop = function () {
         }
     }
 
-
     for (let curroom in Game.rooms) {
       var enemy = Game.rooms[curroom].find(FIND_HOSTILE_CREEPS);
       if (typeof enemy[0] !== 'undefined' && enemy !== null){
@@ -65,7 +64,7 @@ module.exports.loop = function () {
         if (Game.rooms[curroom].energyCapacityAvailable !== Game.rooms[curroom].memory.currentcap){ 
             
             Game.rooms[curroom].memory.defendbody = [];
-            Game.rooms[curroom].memory.minerbody = [MOVE,CARRY,MOVE,MOVE];
+            Game.rooms[curroom].memory.minerbody = [MOVE,CARRY];
             Game.rooms[curroom].memory.transbody = [];
             Game.rooms[curroom].memory.harvestbody = [WORK,CARRY,MOVE];
             Game.rooms[curroom].memory.rangedbody = [];
@@ -77,7 +76,7 @@ module.exports.loop = function () {
                 Game.rooms[curroom].memory.transbody.push (WORK,CARRY,MOVE)
             }
     
-            var minerparts = Math.min(Math.floor((Game.rooms[curroom].energyCapacityAvailable - 200)/100), 8);
+            var minerparts = Math.min(Math.floor((Game.rooms[curroom].energyCapacityAvailable - 100)/100),6);
             for(let i = 0; i < minerparts; i++){
                 Game.rooms[curroom].memory.minerbody.push (WORK)
             }
@@ -93,7 +92,7 @@ module.exports.loop = function () {
                 Game.rooms[curroom].memory.defendbody.push (ATTACK)
             }
     
-            var harvestparts = Math.min(Math.floor((Game.rooms[curroom].energyCapacityAvailable-150)/150),8);
+            var harvestparts = Math.min(Math.floor((Game.rooms[curroom].energyCapacityAvailable-200)/150),6);
             for(let i = 0; i < harvestparts; i++){
                 Game.rooms[curroom].memory.harvestbody.push (CARRY,CARRY,MOVE)
             }
@@ -142,61 +141,66 @@ module.exports.loop = function () {
             name = Game.spawns.Spawn1.createCreep([WORK,CARRY,MOVE,MOVE], null,
                 { role: 'starter', working: false});
         }
-        if (Game.spawns.Spawn1.canCreateCreep(Game.rooms[curroom].memory.minerbody, null) === 0) {
-
-           if (numberOfMiners < 1 && !(Game.rooms[curroom].memory.sources === [])) {
-               name = Game.spawns.Spawn1.createCreep(Game.rooms[curroom].memory.minerbody, null,
-                   { role: 'miner', working: false, readytomine: false, room: Game.rooms[curroom], source: Game.rooms[curroom].memory.sources.pop()});
-           }
-           else if (numberOfHarvesters < minimumNumberOfHarvesters) {
-               name = Game.spawns.Spawn1.createCreep(Game.rooms[curroom].memory.harvestbody, null,
-                   { role: 'harvester', working: false});
-           }
-           else if (numberOfDefenders < 1) {
-               name = Game.spawns.Spawn1.createCreep(Game.rooms[curroom].memory.defendbody, null,
-                   { role: 'defender', working: false});
-           }
-           else if (numberOfMiners < minimumNumberOfMiners && !(Game.rooms[curroom].memory.sources === [])) {
-               name = Game.spawns.Spawn1.createCreep(Game.rooms[curroom].memory.minerbody, null,
-                   { role: 'miner', working: false, readytomine: false, room: Game.rooms[curroom], source: Game.rooms[curroom].memory.sources.pop()});
-           }
-           else if (numberOfUpgraders < minimumNumberOfUpgraders) {
-               name = Game.spawns.Spawn1.createCreep(Game.rooms[curroom].memory.transbody, null,
-                   { role: 'upgrader', working: false,});
-           }
-           else if (numberOfBuilders < minimumNumberOfBuilders) {
-               name = Game.spawns.Spawn1.createCreep(Game.rooms[curroom].memory.transbody, null,
-                   { role: 'builder', working: false});
-           }
-           else if (numberOfRepairers < minimumNumberOfRepairers) {
-               name = Game.spawns.Spawn1.createCreep(Game.rooms[curroom].memory.transbody, null,
-                   { role: 'repairer', working: false});
-           }
-           else if (numberOfDefenders < minimumNumberOfDefenders) {
-               name = Game.spawns.Spawn1.createCreep(Game.rooms[curroom].memory.defendbody, null,
-                   { role: 'defender', working: false});
-           }
-           else if (numberOfRangedDefenders < minimumNumberOfRangedDefenders) {
-               name = Game.spawns.Spawn1.createCreep(Game.rooms[curroom].memory.rangedbody, null,
-                   { role: 'rangeddefender', working: false});
-           }
-//           else if (numberOfRemoteMiners < minimumNumberOfRemoteMiners && !(Memory.rooms[remoterooms[0]].sources === [])) {
-//               name = Game.spawns.Spawn1.createCreep(Game.rooms[curroom].memory.minerbody, null,
-//                   { role: 'remoteminer', working: false, readytomine: false, room: Memory.rooms[remoterooms[0]], source: Memory.rooms[remoterooms[0]].sources.pop()});
-//           }
-//           else if (numberOfRemoteMiners < minimumNumberOfRemoteMiners && !(Memory.rooms[remoterooms[0]].sources === [])) {
-//               name = Game.spawns.Spawn1.createCreep(Game.rooms[curroom].memory.minerbody, null,x
-//                   { role: 'remoteminer', working: false, readytomine: false, room: Memory.rooms[remoterooms[0]], source: Memory.rooms[remoterooms[0]].sources.pop()});
-//           }
-//          else if (Game.rooms[curroom].energyAvailable > (Game.rooms[curroom].energyCapacityAvailable - 400)) {
-//              name = Game.spawns.Spawn1.createCreep([MOVE], null,
-//                  { role: 'attacker', working: false});
-//          }
-
-           if (!(name < 0) && !(name == undefined)) {
-               console.log("Spawned new creep: " + name);
-           }
-
+        var holdingSpawner = _.pick(Game.spawns, function(i) { return (i.pos.roomName === curroom && i.my); });
+        for (let curSpawner in holdingSpawner){  
+          console.log(Game.spawns[curSpawner]);
+          console.log(curSpawner);
+          if (Game.spawns.Spawn1.canCreateCreep(Game.rooms[curroom].memory.minerbody, null) === 0) {
+  
+             if (numberOfMiners < 1 && !(Game.rooms[curroom].memory.sources === [])) {
+                 name = Game.spawns[curSpawner].createCreep(Game.rooms[curroom].memory.minerbody, null,
+                     { role: 'miner', working: false, readytomine: false, room: Game.rooms[curroom], source: Game.rooms[curroom].memory.sources.pop()});
+             }
+             else if (numberOfHarvesters < minimumNumberOfHarvesters && Game.rooms[curroom].find(FIND_STRUCTURES, {filter: (i) => i.structureType === STRUCTURE_CONTAINER} )) {
+                 name = Game.spawns[curSpawner].createCreep(Game.rooms[curroom].memory.harvestbody, null,
+                     { role: 'harvester', working: false});
+             }
+             else if (numberOfDefenders < 1) {
+                 name = Game.spawns[curSpawner].createCreep(Game.rooms[curroom].memory.defendbody, null,
+                     { role: 'defender', working: false});
+             }
+             else if (numberOfMiners < minimumNumberOfMiners && !(Game.rooms[curroom].memory.sources === [])) {
+                 name = Game.spawns[curSpawner].createCreep(Game.rooms[curroom].memory.minerbody, null,
+                     { role: 'miner', working: false, readytomine: false, room: Game.rooms[curroom], source: Game.rooms[curroom].memory.sources.pop()});
+             }
+             else if (numberOfUpgraders < minimumNumberOfUpgraders) {
+                 name = Game.spawns[curSpawner].createCreep(Game.rooms[curroom].memory.transbody, null,
+                     { role: 'upgrader', working: false,});
+             }
+             else if (numberOfBuilders < minimumNumberOfBuilders) {
+                 name = Game.spawns[curSpawner].createCreep(Game.rooms[curroom].memory.transbody, null,
+                     { role: 'builder', working: false});
+             }
+             else if (numberOfRepairers < minimumNumberOfRepairers) {
+                 name = Game.spawns[curSpawner].createCreep(Game.rooms[curroom].memory.transbody, null,
+                     { role: 'repairer', working: false});
+             }
+             else if (numberOfDefenders < minimumNumberOfDefenders) {
+                 name = Game.spawns[curSpawner].createCreep(Game.rooms[curroom].memory.defendbody, null,
+                     { role: 'defender', working: false});
+             }
+             else if (numberOfRangedDefenders < minimumNumberOfRangedDefenders) {
+                 name = Game.spawns[curSpawner].createCreep(Game.rooms[curroom].memory.rangedbody, null,
+                     { role: 'rangeddefender', working: false});
+             }
+//             else if (numberOfRemoteMiners < minimumNumberOfRemoteMiners && !(Memory.rooms[remoterooms[0]].sources === [])) {
+//                 name = Game.spawns[curSpawner].createCreep(Game.rooms[curroom].memory.minerbody, null,
+//                     { role: 'remoteminer', working: false, readytomine: false, room: Memory.rooms[remoterooms[0]], source: Memory.rooms[remoterooms[0]].sources.pop()});
+//             }
+//             else if (numberOfRemoteMiners < minimumNumberOfRemoteMiners && !(Memory.rooms[remoterooms[0]].sources === [])) {
+//                 name = Game.spawns[curSpawner].createCreep(Game.rooms[curroom].memory.minerbody, null,x
+//                     { role: 'remoteminer', working: false, readytomine: false, room: Memory.rooms[remoterooms[0]], source: Memory.rooms[remoterooms[0]].sources.pop()});
+//             }
+//            else if (Game.rooms[curroom].energyAvailable > (Game.rooms[curroom].energyCapacityAvailable - 400)) {
+//                name = Game.spawns[curSpawner].createCreep([MOVE], null,
+//                    { role: 'attacker', working: false});
+//            }
+  
+             if (!(name < 0) && !(name == undefined)) {
+                 console.log("Spawned new creep: " + name);
+             }
+  
+          }
         }
 
       var linksend = undefined;

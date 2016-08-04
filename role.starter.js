@@ -16,7 +16,7 @@ module.exports = {
 
             if (structure != undefined) {
                 if (creep.transfer(structure, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(structure);
+                    creep.moveTo(structure, {ignoreCreeps:true});
                 }
             }
             else if (Game.spawns.Spawn1.energy == 300){
@@ -24,7 +24,7 @@ module.exports = {
             }
 
             else if (creep.transfer(Game.spawns.Spawn1, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(Game.spawns.Spawn1);
+                creep.moveTo(Game.spawns.Spawn1, {ignoreCreeps:true});
             }
         }
         else {
@@ -34,10 +34,10 @@ module.exports = {
                         i.store[RESOURCE_ENERGY] > 100 
                });
             if (creep.withdraw(energystore, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(energystore);
+                creep.moveTo(energystore, {ignoreCreeps:true});
             }
             else if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(source);   
+                creep.moveTo(source, {ignoreCreeps:true});   
             }
         }
     }

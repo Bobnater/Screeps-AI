@@ -1,6 +1,8 @@
+var roleBuilder = require('role.builder');
 
 module.exports = {
     run: function(creep) {
+
 
         let droppedEnergy = creep.pos.findInRange(FIND_DROPPED_ENERGY, 1);  
         if (droppedEnergy.length > 0) {
@@ -11,9 +13,9 @@ module.exports = {
             var energystorage = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
                 filter: (i) => i.structureType == STRUCTURE_STORAGE
             }); 
-            if (energystore !== null) {
+            if (typeof energystorage !== 'undefined' && energystorage !== null && energystorage[0] !== null) {
                 if (creep.transfer(energystorage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(energystorage);
+                    creep.moveTo(energystorage, {ignoreCreeps:true});
                 }
             }
         }
@@ -32,31 +34,34 @@ module.exports = {
                     (s.structureType == STRUCTURE_EXTENSION || s.structureType == STRUCTURE_SPAWN)
                 });
     
-                if (structure !== null) {
+                if (typeof structure !== 'undefined' && structure !== null && structure[0] !== null) {
                     if (creep.transfer(structure, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(structure);
+                        creep.moveTo(structure, {ignoreCreeps:true});
                     }
                 }
                 else {
                     structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
                         filter: (s) => s.energy < s.energyCapacity && (s.structureType == STRUCTURE_TOWER ) //|| s.structureType == STRUCTURE_LINK)
                     });
-        
-                    if (structure !== null) {
-                        if (creep.transfer(structure, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                            creep.moveTo(structure);
-                        }
-                    }
-                    else {
-                        var bigasscontainer = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
+
+                    var bigasscontainer = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
                             filter: (s) => s.store < s.storeCapacity && s.structureType == STRUCTURE_STORAGE
                         });
-                        if (bigasscontainer !== null) {
-                            if (creep.transfer(bigasscontainer, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                                creep.moveTo(bigasscontainer);
-                            }
+
+                    if (typeof structure !== 'undefined' && structure !== null && structure[0] !== null) {
+                        if (creep.transfer(structure, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                            creep.moveTo(structure, {ignoreCreeps:true});
                         }
                     }
+                    else if (typeof bigasscontainer !== 'undefined' && bigasscontainer !== null && bigasscontainer[0] !== null) {
+                            if (creep.transfer(bigasscontainer, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                                creep.moveTo(bigasscontainer, {ignoreCreeps:true});
+                            }
+                        }
+                        else{
+                            roleBuilder.run(creep);
+                        }
+                    
                 }
             }
             else {
@@ -65,11 +70,12 @@ module.exports = {
                             i.store[RESOURCE_ENERGY] > 0
                    });
 
-                if (energystore !== null) {
+                if (typeof energystore !== 'undefined' && energystore !== null && energystore[0] !== null) {
                     if (creep.withdraw(energystore, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(energystore);
+                        creep.moveTo(energystore, {ignoreCreeps:true});
                     }
                 }
+
             }
         }
 
