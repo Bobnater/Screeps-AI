@@ -3,37 +3,27 @@ module.exports = {
         var walltarget =[];
         var spawntarget =[];
         var creeptarget =[];
-
         spawntarget = creep.pos.findClosestByRange(FIND_HOSTILE_SPAWNS);
         creeptarget = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
         walltarget = creep.pos.findClosestByRange(FIND_STRUCTURES);
-        if(spawntarget === null) {
-            var right = creep.pos.findClosestByRange(FIND_EXIT_RIGHT);
-            var up = creep.pos.findClosestByRange(FIND_EXIT_TOP);
-            var down = creep.pos.findClosestByRange(FIND_EXIT_BOTTOM);
-            var left = creep.pos.findClosestByRange(FIND_EXIT_LEFT);   
-            if(!(left == undefined)){
-                creep.moveTo(left);
-            } 
-           else if(!(up == undefined)){
-               creep.moveTo(up);
-           } 
-           else if(!(down == undefined)){
-               creep.moveTo(down);
-           } 
+
+        var attackflags = _.filter((Game.flags), function(i) { return (i.name === 'Attack'); });
+        if (attackflags[0].pos.roomName !== creep.pos.roomName) {
+            creep.moveTo(attackflags[0]);
         }
-        else if(spawntarget[0] !== null) {
+        else if(!!spawntarget) {
             creep.moveTo(spawntarget)
         }
-        else if(creeptarget[0] !== null) {
+        else if(!!creeptarget) {
             creep.moveTo(creeptarget)
         }
-        else if(walltarget[0] !== null) {
+        else if(!!walltarget) {
             creep.moveTo(walltarget)
         }
         creep.attack(spawntarget);
         creep.attack(creeptarget);
-        if(Game.rooms[creep.pos.roomName].controller.owner.username !== 'Kartith') {
+        console.log(!walltarget);
+        if(!!Game.rooms[creep.pos.roomName].controller && Game.rooms[creep.pos.roomName].controller.owner.username !== 'Kartith' && !creeptarget && !spawntarget) {
             creep.attack(walltarget);
             Game.notify('Im hitting walls in room owned by ' +Game.rooms[creep.pos.roomName].controller.owner);
         }

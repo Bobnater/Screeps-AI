@@ -4,7 +4,7 @@ module.exports = {
         var target = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
         if(target !== null){
             if(creep.pos.getRangeTo(target) < 3) {
-                var runningPath = PathFinder.search(creep.pos, {pos: target.pos, range: 3}, {flee:true})
+                var runningPath = PathFinder.search(creep.pos, {pos: target.pos, range: 3}, {flee:true});
                 creep.moveByPath(runningPath.path);
     
             }
@@ -15,7 +15,7 @@ module.exports = {
             }
         }
         else {
-            creep.moveTo(4,15);
+            creep.moveTo(11,16);
         }
 
     }

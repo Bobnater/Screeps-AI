@@ -9,7 +9,7 @@ module.exports = {
             }
         }
         else {
-            creep.moveTo(4,15);
+            creep.moveTo(11,16);
         }
 
         if (creep.ticksToLive < 100){

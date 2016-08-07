@@ -15,7 +15,7 @@ module.exports = {
             }); 
             if (typeof energystorage !== 'undefined' && energystorage !== null && energystorage[0] !== null) {
                 if (creep.transfer(energystorage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(energystorage, {ignoreCreeps:true});
+                    creep.moveTo(energystorage);
                 }
             }
         }
@@ -36,7 +36,7 @@ module.exports = {
     
                 if (typeof structure !== 'undefined' && structure !== null && structure[0] !== null) {
                     if (creep.transfer(structure, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(structure, {ignoreCreeps:true});
+                        creep.moveTo(structure);
                     }
                 }
                 else {
@@ -50,12 +50,12 @@ module.exports = {
 
                     if (typeof structure !== 'undefined' && structure !== null && structure[0] !== null) {
                         if (creep.transfer(structure, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                            creep.moveTo(structure, {ignoreCreeps:true});
+                            creep.moveTo(structure);
                         }
                     }
                     else if (typeof bigasscontainer !== 'undefined' && bigasscontainer !== null && bigasscontainer[0] !== null) {
                             if (creep.transfer(bigasscontainer, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                                creep.moveTo(bigasscontainer, {ignoreCreeps:true});
+                                creep.moveTo(bigasscontainer);
                             }
                         }
                         else{
@@ -72,7 +72,7 @@ module.exports = {
 
                 if (typeof energystore !== 'undefined' && energystore !== null && energystore[0] !== null) {
                     if (creep.withdraw(energystore, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(energystore, {ignoreCreeps:true});
+                        creep.moveTo(energystore);
                     }
                 }
 

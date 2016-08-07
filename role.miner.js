@@ -48,7 +48,7 @@ module.exports = {
 	        }
 
 	        else{
-	            creep.moveTo(source, {ignoreCreeps:true}); 
+	            creep.moveTo(source); 
 	        }
 
     	}

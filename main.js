@@ -15,7 +15,7 @@ var name = undefined;
 
 module.exports.loop = function () {
 
-  if (Game.cpu.bucket < 900){
+  if (Game.cpu.bucket < 9000){
     Game.notify('HOLY SHIT BUY SOME CPU');
   }
 
@@ -23,10 +23,10 @@ module.exports.loop = function () {
     var minimumNumberOfMiners = 2;
     var minimumNumberOfHarvesters = 2;
     var minimumNumberOfUpgraders = 2;
-    var minimumNumberOfBuilders = 3;
+    var minimumNumberOfBuilders = 2;
     var minimumNumberOfRepairers = 0;
-    var minimumNumberOfDefenders = 2;
-    var minimumNumberOfRangedDefenders = 1;
+    var minimumNumberOfDefenders = 0;
+    var minimumNumberOfRangedDefenders = 2;
     var minimumNumberOfRemoteMiners = 1;
     var minimumNumberOfRemoteHarvesters = 1;
     var numberOfMiners = _.sum(Game.creeps, (c) => c.memory.role == 'miner');
@@ -38,7 +38,6 @@ module.exports.loop = function () {
     var numberOfRangedDefenders = _.sum(Game.creeps, (c) => c.memory.role == 'rangeddefender');
     var numberOfRemoteMiners = _.sum(Game.creeps, (c) => c.memory.role == 'remoteminer');
     var numberOfRemoteHarvesters = _.sum(Game.creeps, (c) => c.memory.role == 'remoteharvester');
-    var remoterooms = ['E41S2'];
 
     for (var i in Memory.creeps){
         if (!Game.creeps[i]) {
@@ -50,6 +49,7 @@ module.exports.loop = function () {
     }
 
     for (let curroom in Game.rooms) {
+
       var enemy = Game.rooms[curroom].find(FIND_HOSTILE_CREEPS);
       if (typeof enemy[0] !== 'undefined' && enemy !== null){
         var username1 = enemy[0].owner.username;
@@ -143,8 +143,6 @@ module.exports.loop = function () {
         }
         var holdingSpawner = _.pick(Game.spawns, function(i) { return (i.pos.roomName === curroom && i.my); });
         for (let curSpawner in holdingSpawner){  
-          console.log(Game.spawns[curSpawner]);
-          console.log(curSpawner);
           if (Game.spawns.Spawn1.canCreateCreep(Game.rooms[curroom].memory.minerbody, null) === 0) {
   
              if (numberOfMiners < 1 && !(Game.rooms[curroom].memory.sources === [])) {
@@ -183,23 +181,11 @@ module.exports.loop = function () {
                  name = Game.spawns[curSpawner].createCreep(Game.rooms[curroom].memory.rangedbody, null,
                      { role: 'rangeddefender', working: false});
              }
-//             else if (numberOfRemoteMiners < minimumNumberOfRemoteMiners && !(Memory.rooms[remoterooms[0]].sources === [])) {
-//                 name = Game.spawns[curSpawner].createCreep(Game.rooms[curroom].memory.minerbody, null,
-//                     { role: 'remoteminer', working: false, readytomine: false, room: Memory.rooms[remoterooms[0]], source: Memory.rooms[remoterooms[0]].sources.pop()});
-//             }
-//             else if (numberOfRemoteMiners < minimumNumberOfRemoteMiners && !(Memory.rooms[remoterooms[0]].sources === [])) {
-//                 name = Game.spawns[curSpawner].createCreep(Game.rooms[curroom].memory.minerbody, null,x
-//                     { role: 'remoteminer', working: false, readytomine: false, room: Memory.rooms[remoterooms[0]], source: Memory.rooms[remoterooms[0]].sources.pop()});
-//             }
-//            else if (Game.rooms[curroom].energyAvailable > (Game.rooms[curroom].energyCapacityAvailable - 400)) {
-//                name = Game.spawns[curSpawner].createCreep([MOVE], null,
-//                    { role: 'attacker', working: false});
-//            }
+            // else for () 
   
-             if (!(name < 0) && !(name == undefined)) {
+             if (!(name < 0) && !!name) {
                  console.log("Spawned new creep: " + name);
              }
-  
           }
         }
 
@@ -250,7 +236,7 @@ module.exports.loop = function () {
             tower.repair(thingtorepair[0]);
         }
         else if (tower.energy > 950 && Object.keys(Game.creeps).length > 5) {
-            var thingtorepair2 = tower.pos.findInRange(FIND_STRUCTURES,30, { filter: function(c) { 
+            var thingtorepair2 = tower.pos.findInRange(FIND_STRUCTURES,50, { filter: function(c) { 
                 return (c.hits < 10000 && (c.structureType === STRUCTURE_WALL || c.structureType === STRUCTURE_RAMPART)); 
             }
             });
