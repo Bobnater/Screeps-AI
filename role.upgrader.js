@@ -21,7 +21,7 @@ module.exports = {
         else {
 
             var energystore = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-                filter: (i) => ((i.structureType == STRUCTURE_CONTAINER || i.structureType == STRUCTURE_STORAGE) && i.store[RESOURCE_ENERGY] > 0) || (i.structureType == STRUCTURE_LINK && i.energy > 0)
+                filter: (i) => ((i.structureType == STRUCTURE_CONTAINER || i.structureType == STRUCTURE_STORAGE) && i.store[RESOURCE_ENERGY] > 200) || (i.structureType == STRUCTURE_LINK && i.energy > 200)
                });
             if (energystore !== null) {
                  if (creep.withdraw(energystore, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {

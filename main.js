@@ -23,7 +23,7 @@ module.exports.loop = function () {
     var minimumNumberOfMiners = 2;
     var minimumNumberOfHarvesters = 2;
     var minimumNumberOfUpgraders = 2;
-    var minimumNumberOfBuilders = 2;
+    var minimumNumberOfBuilders = 1;
     var minimumNumberOfRepairers = 0;
     var minimumNumberOfDefenders = 0;
     var minimumNumberOfRangedDefenders = 2;
@@ -43,6 +43,9 @@ module.exports.loop = function () {
         if (!Game.creeps[i]) {
             if(Memory.creeps[i].source){
                 Memory.rooms[Memory.creeps[i].room.name].sources.push(Memory.creeps[i].source);
+            }
+            if(Memory.creeps[i].container){
+               Memory.rooms[Memory.creeps[i].room.name].containers.push(Memory.creeps[i].container);
             }
             delete Memory.creeps[i];
         }
@@ -135,6 +138,11 @@ module.exports.loop = function () {
             console.log(Game.rooms[curroom].find(FIND_SOURCES));
             console.log(Memory.rooms[curroom].sources)
         }
+        if(typeof Memory.rooms[curroom].containers === 'undefined') {
+            Memory.rooms[curroom].containers = Game.rooms[curroom].find(FIND_STRUCTURES, {filter: (i) => i.structureType === STRUCTURE_CONTAINER} );
+            console.log('Found containers in room '+curroom+', they have been logged.');
+            console.log(Memory.rooms[curroom].containers);
+        }
 
 
         if ((Object.keys(Game.creeps).length) < 2){
@@ -145,19 +153,19 @@ module.exports.loop = function () {
         for (let curSpawner in holdingSpawner){  
           if (Game.spawns.Spawn1.canCreateCreep(Game.rooms[curroom].memory.minerbody, null) === 0) {
   
-             if (numberOfMiners < 1 && !(Game.rooms[curroom].memory.sources === [])) {
+             if (numberOfMiners < 1 && !!Memory.rooms[curroom].sources[0]) {
                  name = Game.spawns[curSpawner].createCreep(Game.rooms[curroom].memory.minerbody, null,
                      { role: 'miner', working: false, readytomine: false, room: Game.rooms[curroom], source: Game.rooms[curroom].memory.sources.pop()});
              }
-             else if (numberOfHarvesters < minimumNumberOfHarvesters && Game.rooms[curroom].find(FIND_STRUCTURES, {filter: (i) => i.structureType === STRUCTURE_CONTAINER} )) {
+             else if (numberOfHarvesters < minimumNumberOfHarvesters && !!Memory.rooms[curroom].containers[0] ) {
                  name = Game.spawns[curSpawner].createCreep(Game.rooms[curroom].memory.harvestbody, null,
-                     { role: 'harvester', working: false});
+                     { role: 'harvester', working: false, container: Game.rooms[curroom].memory.containers.pop(), room: Game.rooms[curroom]});
              }
-             else if (numberOfDefenders < 1) {
+             else if (numberOfDefenders < 0) {
                  name = Game.spawns[curSpawner].createCreep(Game.rooms[curroom].memory.defendbody, null,
                      { role: 'defender', working: false});
              }
-             else if (numberOfMiners < minimumNumberOfMiners && !(Game.rooms[curroom].memory.sources === [])) {
+             else if (numberOfMiners < minimumNumberOfMiners && !!Memory.rooms[curroom].sources[0]) {
                  name = Game.spawns[curSpawner].createCreep(Game.rooms[curroom].memory.minerbody, null,
                      { role: 'miner', working: false, readytomine: false, room: Game.rooms[curroom], source: Game.rooms[curroom].memory.sources.pop()});
              }
